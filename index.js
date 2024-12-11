@@ -8,6 +8,19 @@ require('dotenv').config();
 
 
 
+// check if all "DB" files exist if not create them
+if (!fs.existsSync("./settings.json")) {
+	console.log("settings.json not found, creating...");
+	fs.writeFileSync("./settings.json", "{}");
+}
+if (!fs.existsSync("./users.json")) {
+	console.log("users.json not found, creating...");
+	fs.writeFileSync("./users.json", "{}");
+}
+if (!fs.existsSync("./votes.json")) {
+	console.log("votes.json not found, creating...");
+	fs.writeFileSync("./votes.json", "{}");
+}
 
 // Soft check for .env file, exit if does not exist
 if (!fs.existsSync("./.env")) {
