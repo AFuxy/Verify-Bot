@@ -43,12 +43,12 @@ module.exports = {
 
     // add two buttons for Deny and Approve
     const Deny = new ButtonBuilder()
-      .setCustomId("deny-" + member.id)
+      .setCustomId("D-" + member.id)
       .setLabel("Deny")
       .setStyle(ButtonStyle.Danger)
       .setEmoji("🚫");
     const Approve = new ButtonBuilder()
-      .setCustomId("approve-" + member.id)
+      .setCustomId("A-" + member.id)
       .setLabel("Approve")
       .setStyle(ButtonStyle.Success)
       .setEmoji("✅");
