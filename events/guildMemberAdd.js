@@ -27,8 +27,13 @@ module.exports = {
     }
 
     // check if the user already has any rank that is not the VisitorRoleID and return if so
-    if (data[member.id] && data[member.id].rank != process.env.VisitorRoleID) return;
+    if (data[member.id] && data[member.id].rank != process.env.VisitorRoleID){
+      member.roles.add(data[member.id].rank);
+      return;
+    }
 
+    // give the user the VisitorRoleID and send embed message
+    await member.roles.add(process.env.VisitorRoleID);
     const embed = new EmbedBuilder()
       .setTitle(" > User Joined")
       .setColor("Purple")
