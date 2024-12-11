@@ -1,0 +1,23 @@
+{
+  "name": "verify-bot",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AFuxy/Verify-Bot.git"
+  },
+  "author": "AFuxy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AFuxy/Verify-Bot/issues"
+  },
+  "homepage": "https://github.com/AFuxy/Verify-Bot#readme",
+  "description": "",
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7"
+  }
+}
