@@ -1,0 +1,8 @@
+- [x] System to track how many votes have been cast
+- [x] System to "rank up" a user using a command
+- [x] System to "rank down" a user using a command
+- [x] System to auto give rkans if the user leaves and joins back (unless kicked/banned)
+- [x] System to auto check when max votes have been reached and run deny/approve calculations with the votes results
+- [x] System to detect when buttons are pressed and update the votes.json file
+- [ ] System to initiate vote for rank up/down requests
+- [ ] Readme explaining how to setup bot and how to contribute
