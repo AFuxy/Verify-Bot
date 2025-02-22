@@ -62,6 +62,7 @@ module.exports = {
       data[member.id] = {
         rank: process.env.VisitorRoleID,
         joinDate: member.joinedAt,
+        nsfw: false,
         denied: false,
       };
       fs.writeFileSync("./users.json", JSON.stringify(data, null, 4));

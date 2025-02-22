@@ -23,7 +23,7 @@ module.exports = {
                 const data = JSON.parse(fs.readFileSync("./votes.json"));
                 const serverConfig = JSON.parse(fs.readFileSync("./settings.json"));
                 // check if user has the staff role
-                if (!interaction.member.roles.cache.has(serverConfig[interaction.guild.id].staffrole)) {
+                if (!interaction.member.roles.cache.has(serverConfig[interaction.guild.id].voterole)) {
                     const embed = new EmbedBuilder()
                         .setTitle(" > Vote Denied")
                         .setColor("Red")
@@ -62,9 +62,17 @@ module.exports = {
                             .setTitle(" > Vote Accepted")
                             .setColor("Green")
                             .setTimestamp()
-                            .setDescription(`The user \`${memberId.tag}\` has 1 voted added to accept`)
+                            .setDescription(`Vote for \`${memberId.tag}\` added to accepted list`)
 
                         await interaction.reply({ embeds: [embed], ephemeral: true });
+
+                        const embed2 = new EmbedBuilder()
+                            .setTitle(" > Vote Updated")
+                            .setColor("Purple")
+                            .setTimestamp()
+                            .setDescription(`Votes are now at ${data[memberId.id].voteCount}/${serverConfig[interaction.guild.id].votelimit}\nFor user: \`${memberId.tag}\``)
+
+                        await interaction.guild.channels.cache.get(serverConfig[interaction.guild.id].logchannel).send({ embeds: [embed2] });
                     }else{
                         const embed = new EmbedBuilder()
                             .setTitle(" > Vote Denied")
@@ -86,9 +94,17 @@ module.exports = {
                             .setTitle(" > Vote Accepted")
                             .setColor("Green")
                             .setTimestamp()
-                            .setDescription(`The user \`${memberId.tag}\` has 1 voted added to denied`)
+                            .setDescription(`Vote for \`${memberId.tag}\` added to denied list`)
 
                         await interaction.reply({ embeds: [embed], ephemeral: true });
+
+                        const embed2 = new EmbedBuilder()
+                            .setTitle(" > Vote Updated")
+                            .setColor("Purple")
+                            .setTimestamp()
+                            .setDescription(`Votes are now at ${data[memberId.id].voteCount}/${serverConfig[interaction.guild.id].votelimit}\nFor user: \`${memberId.tag}\``)
+
+                        await interaction.guild.channels.cache.get(serverConfig[interaction.guild.id].logchannel).send({ embeds: [embed2] });
                     }else{
                         const embed = new EmbedBuilder()
                             .setTitle(" > Vote Denied")

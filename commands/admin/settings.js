@@ -30,13 +30,63 @@ module.exports = {
                         .setRequired(true)
                 )
         )
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('voterole')
+                .setDescription('Set the role that can vote')
+                .addRoleOption(option =>
+                    option
+                        .setName('role')
+                        .setDescription('The role that can vote')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('nsfwrole')
+                .setDescription('Set the nsfw role')
+                .addRoleOption(option =>
+                    option
+                        .setName('role')
+                        .setDescription('The nsfw role')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('logchannel')
+                .setDescription('Set the log channel')
+                .addChannelOption(option => 
+                    option
+                        .setName('channel')
+                        .setDescription('The log channel')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('adduserdb')
+                .setDescription('Add a user to the database')
+                .addUserOption(option =>
+                    option
+                        .setName('user')
+                        .setDescription('The user to add')
+                        .setRequired(true)
+                )
+                .addRoleOption(option =>
+                    option
+                        .setName('role')
+                        .setDescription('The current highest trust role of the user')
+                        .setRequired(true)
+                )
+        )
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
     async execute(interaction) {
         const subCommand = interaction.options.getSubcommand();
         const serverId = interaction.guildId;
         const serverConfig = JSON.parse(fs.readFileSync("./settings.json"));
 
-        // check if the user has permission to use the command
+        // check if user has the staff role
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             return interaction.reply({ content: 'You do not have permission to use this command!', ephemeral: true });
         }
@@ -64,6 +114,40 @@ module.exports = {
             serverConfig[serverId].staffrole = role.id;
             fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
             embed.addFields({ name: "Staff Role", value: role.name });
+        }
+
+        if (subCommand === 'voterole') {
+            const role = interaction.options.getRole('role');
+            serverConfig[serverId].voterole = role.id;
+            fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+            embed.addFields({ name: "Vote Role", value: role.name });
+        }
+
+        if (subCommand === 'nsfwrole') {
+            const role = interaction.options.getRole('role');
+            serverConfig[serverId].nsfwrole = role.id;
+            fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+            embed.addFields({ name: "NSFW Role", value: role.name });
+        }
+
+        if (subCommand === 'logchannel') {
+            const channel = interaction.options.getChannel('channel');
+            serverConfig[serverId].logchannel = channel.id;
+            fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+            embed.addFields({ name: "Log Channel", value: channel.name });
+        }
+
+        if (subCommand === 'adduserdb') {
+            const user = interaction.options.getUser('user');
+            const data = JSON.parse(fs.readFileSync("./users.json"));
+            data[user.id] = {
+                rank: interaction.options.getRole('role').id,
+                joinDate: user.joinedAt,
+                nsfw: false,
+                denied: false,
+            };
+            fs.writeFileSync("./users.json", JSON.stringify(data, null, 4));
+            embed.addFields({ name: "User added to database", value: user.tag });
         }
 
         await interaction.reply({ embeds: [embed] });

@@ -6,3 +6,8 @@
 - [x] System to detect when buttons are pressed and update the votes.json file
 - [ ] System to initiate vote for rank up/down requests
 - [ ] Readme explaining how to setup bot and how to contribute
+- [x] Vote Role
+- [x] NSFW Role
+- [x] Give the NSFW role when command run and also turn "nsfw" to true in the users.json file 
+- [x] Public command to see some info about a user
+- [x] Update the user Joined embed with current votes and out of the max amount of votes

@@ -8,23 +8,34 @@ module.exports = {
         .setDescription('List of commands that can be used to update the bot settings')
         .addSubcommand(subcommand =>
             subcommand
-                .setName('up')
-                .setDescription('Rank up a user')
+                .setName('upgrade')
+                .setDescription('upgrade a users rank')
                 .addUserOption(option =>
                     option
                         .setName('user')
-                        .setDescription('The user to rank up')
+                        .setDescription('The user to upgrade')
                         .setRequired(true)
                 )
         )
         .addSubcommand(subcommand =>
             subcommand
-                .setName('down')
-                .setDescription('Rank down a user')
+                .setName('downgrade')
+                .setDescription('downgrade a users rank')
                 .addUserOption(option =>
                     option
                         .setName('user')
-                        .setDescription('The user to rank down')
+                        .setDescription('The user to downgrade')
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('nsfw')
+                .setDescription('Give the NSFW role')
+                .addUserOption(option =>
+                    option
+                        .setName('user')
+                        .setDescription('The user to give the nsfw role')
                         .setRequired(true)
                 )
         ),
@@ -33,13 +44,17 @@ module.exports = {
         const user = interaction.options.getUser('user');
         const serverId = interaction.guildId;
         const data = JSON.parse(fs.readFileSync("./users.json", "utf8"));
+        const serverConfig = JSON.parse(fs.readFileSync("./settings.json", "utf8"));
 
-        // check if the user has permission to use the command
-        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+        // check if the user has permission to use the command or if the user has the staff role
+        if (interaction.member.roles.cache.has(serverConfig[serverId].staffrole) || interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+
+        } else {
             return interaction.reply({ content: 'You do not have permission to use this command!', ephemeral: true });
         }
 
-        if (subCommand === 'up') {
+
+        if (subCommand === 'upgrade') {
             if (data[user.id] && data[user.id].rank == process.env.NewUserRoleID){
                 data[user.id].rank = process.env.UserRoleID;
                 await interaction.guild.members.cache.get(user.id).roles.remove(process.env.NewUserRoleID);
@@ -68,7 +83,7 @@ module.exports = {
                 .setTimestamp()
                 .setDescription(`The user \`${user.tag}\` has been ranked up! to ${client.guilds.cache.get(serverId).roles.cache.get(data[user.id].rank).name}`);
             await interaction.reply({ embeds: [embed], ephemeral: true });
-        } else if (subCommand === 'down') {
+        } else if (subCommand === 'downgrade') {
             if (data[user.id] && data[user.id].rank == process.env.TrustedUserRoleID){
                 data[user.id].rank = process.env.KnownUserRoleID;
                 await interaction.guild.members.cache.get(user.id).roles.remove(process.env.TrustedUserRoleID);
@@ -97,6 +112,27 @@ module.exports = {
                 .setTimestamp()
                 .setDescription(`The user \`${user.tag}\` has been ranked down! to ${client.guilds.cache.get(serverId).roles.cache.get(data[user.id].rank).name}`);
             await interaction.reply({ embeds: [embed], ephemeral: true });
+        } else if (subCommand === 'nsfw') {
+            if(data[user.id] && (data[user.id].nsfw == undefined || data[user.id].nsfw == false)){
+                data[user.id].nsfw = true;
+                const embed = new EmbedBuilder()
+                .setTitle(" > NSFW")
+                .setColor("Green")
+                .setTimestamp()
+                .setDescription(`The user \`${user.tag}\` has had the NSFW role added!`);
+                await interaction.guild.members.cache.get(user.id).roles.add(serverConfig[serverId].nsfwrole);
+                await interaction.reply({ embeds: [embed], ephemeral: true });
+            }else{
+                data[user.id].nsfw = false;
+                const embed = new EmbedBuilder()
+                .setTitle(" > NSFW")
+                .setColor("Red")
+                .setTimestamp()
+                .setDescription(`The user \`${user.tag}\` has had the NSFW role removed!`);
+                await interaction.guild.members.cache.get(user.id).roles.remove(serverConfig[serverId].nsfwrole);
+                await interaction.reply({ embeds: [embed], ephemeral: true });
+            }
+            fs.writeFileSync("./users.json", JSON.stringify(data, null, 4));
         }
     }
 };
