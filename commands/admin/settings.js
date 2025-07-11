@@ -80,6 +80,17 @@ module.exports = {
                         .setRequired(true)
                 )
         )
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('verifcation')
+                .setDescription('Enable/Disable Verification')
+                .addBooleanOption(option =>
+                    option
+                        .setName('enable')
+                        .setDescription('Enable/Disable Verification')
+                        .setRequired(true)
+                )
+        )
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
     async execute(interaction) {
         const subCommand = interaction.options.getSubcommand();
@@ -148,6 +159,13 @@ module.exports = {
             };
             fs.writeFileSync("./users.json", JSON.stringify(data, null, 4));
             embed.addFields({ name: "User added to database", value: user.tag });
+        }
+
+        if (subCommand === 'verifcation') {
+            const enable = interaction.options.getBoolean('enable');
+            serverConfig[serverId].verification = enable;
+            fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+            embed.addFields({ name: "Verification", value: enable.toString() });
         }
 
         await interaction.reply({ embeds: [embed] });

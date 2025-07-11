@@ -32,6 +32,21 @@ module.exports = {
       return;
     }
 
+    // check if the server has disabled the verify system and return if so
+    const serverConfig = JSON.parse(fs.readFileSync("./settings.json"));
+    if (!serverConfig[member.guild.id].verification){
+      member.roles.add(process.env.NewUserRoleID);
+      const data = JSON.parse(fs.readFileSync("./users.json"));
+      data[member.id] = {
+        rank: process.env.NewUserRoleID,
+        joinDate: member.joinedAt,
+        nsfw: false,
+        denied: false,
+      };
+      fs.writeFileSync("./users.json", JSON.stringify(data, null, 4));
+      return;
+    }
+
     // give the user the VisitorRoleID and send embed message
     await member.roles.add(process.env.VisitorRoleID);
     const embed = new EmbedBuilder()

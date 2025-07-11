@@ -11,3 +11,5 @@
 - [x] Give the NSFW role when command run and also turn "nsfw" to true in the users.json file 
 - [x] Public command to see some info about a user
 - [x] Update the user Joined embed with current votes and out of the max amount of votes
+- [x] System to disable vote system
+- [x] Fix the /userinfo command with a user that doesn't exist or have a valid role
