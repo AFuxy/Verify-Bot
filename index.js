@@ -61,4 +61,50 @@ for (const file of eventFiles) {
 	console.log("Events: " + event.name);
 }
 
+setInterval(() => {
+	const date = new Date();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const GuildID = process.env.GuildID;
+	const serverConfig = JSON.parse(fs.readFileSync("./settings.json", "utf8"));
+	if (month === 10 && day >= 1 && day <= 31) {
+		if (serverConfig[GuildID].seasonpfpscurrent !== "halloween") {
+			serverConfig[GuildID].seasonpfpscurrent = "halloween";
+			fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+			if (serverConfig[GuildID].seasonpfps["halloween"]) {
+				client.guilds.cache.get(process.env.GuildID).setIcon(`./cdn/${GuildID}/halloween.png`);
+				console.log("Season Icon set to Halloween");
+			}
+		}
+	} else if (month === 12 && day >= 1 && day <= 31) {
+		if (serverConfig[GuildID].seasonpfpscurrent !== "christmas") {
+			serverConfig[GuildID].seasonpfpscurrent = "christmas";
+			fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+			if (serverConfig[GuildID].seasonpfps["christmas"]) {
+				client.guilds.cache.get(process.env.GuildID).setIcon(`./cdn/${GuildID}/christmas.png`);
+				console.log("Season Icon set to Christmas");
+			}
+		}
+	} else if (month === 3 && day >= 1 && day <= 31) {
+		if (serverConfig[GuildID].seasonpfpscurrent !== "easter") {
+			serverConfig[GuildID].seasonpfpscurrent = "easter";
+			fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+			if (serverConfig[GuildID].seasonpfps["easter"]) {
+				client.guilds.cache.get(process.env.GuildID).setIcon(`./cdn/${GuildID}/easter.png`);
+				console.log("Season Icon set to Easter");
+			}
+		}
+	} else {
+		if (serverConfig[GuildID].seasonpfpscurrent !== "default") {
+			serverConfig[GuildID].seasonpfpscurrent = "default";
+			fs.writeFileSync("./settings.json", JSON.stringify(serverConfig, null, 4));
+			if (serverConfig[GuildID].seasonpfps["default"]) {
+				client.guilds.cache.get(process.env.GuildID).setIcon(`./cdn/${GuildID}/default.png`);
+				console.log("Season Icon Reset");
+			}
+		}
+	}
+}, 1000 * 60 * 60);
+
+
 client.login(process.env.Token);

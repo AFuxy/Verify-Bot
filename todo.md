@@ -13,3 +13,8 @@
 - [x] Update the user Joined embed with current votes and out of the max amount of votes
 - [x] System to disable vote system
 - [x] Fix the /userinfo command with a user that doesn't exist or have a valid role
+
+# Out of scope for this project
+- [x] The ability for the bot to auto update the pfp of the server based on the season
+- [x] A staff command to upload new pfp for seasons
+- [x] Preset or custom seasons command
